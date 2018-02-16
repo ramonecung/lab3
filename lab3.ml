@@ -166,17 +166,20 @@ below are some other values you might find helpful.
 ......................................................................*)
 
 let convert_to_rgb c = 
-  match c with
-  | RGB (r, g, b) -> (r, g, b) 
-  | Simple (cval) -> match cval with
-                     | Red -> (255, 0, 0)
-                     | Crimson -> (220, 20, 60)
-                     | Orange -> (255, 165, 0)
-                     | Yellow -> (255, 255, 0)
-                     | Green -> (0, 255, 0)
-                     | Blue -> (255, 0, 0)
-                     | Indigo -> (75, 0, 130)
-                     | Violet -> (240, 130, 240)
+  match (valid_rgb c) with
+  | RGB (r, g, b) ->
+    (match RGB (r, g, b) with
+    | RGB (r, g, b) -> (r, g, b) 
+    | Simple (cval) -> match cval with
+                      | Red -> (255, 0, 0)
+                      | Crimson -> (220, 20, 60)
+                      | Orange -> (255, 165, 0)
+                      | Yellow -> (255, 255, 0)
+                      | Green -> (0, 255, 0)
+                      | Blue -> (255, 0, 0)
+                      | Indigo -> (75, 0, 130)
+                      | Violet -> (240, 130, 240))
+  | _ -> raise (Invalid_Color "An unexpected value for type color, variable c was found.")
 ;;
 
 (* If we want to blend two colors, we might be tempted to average each
@@ -201,8 +204,14 @@ and returns an integer whose result matches the calculation above. Be
 sure to round your result when converting back to an integer.
 ......................................................................*)
 
-let blend_channel = 
-  fun _ -> failwith "blend_channel not implemented" ;;
+let blend_channel (channel_a: int) (channel_b: int) : int = 
+  (* match (channel_a >= 0 && channel_a <= 255) && (channel_b >= 0 && channel_b <= 255) with 
+  | true ->  int_of_float (sqrt( ((float_of_int x) ** 2. +. (float_of_int y) ** 2.) /. 2. ))
+  | false -> raise 
+    (Invalid_Color "Only values between 0 and 255 are valid.") *)
+
+    int_of_float (sqrt( ((float_of_int channel_a) ** 2. +. (float_of_int channel_b) ** 2.) /. 2. ));;
+  ;;
 
 (*......................................................................
 Exercise 6: Now write a function, blend, that returns the result of
