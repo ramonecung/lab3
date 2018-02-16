@@ -56,7 +56,7 @@ be any of the following options: red, crimson, orange, yellow, green,
 blue, indigo, or violet.
 ......................................................................*)
 
-type color_label = NotImplemented ;;
+type color_label = Red | Crimson | Orange | Yellow | Green | Blue | Indigo | Violet ;;
 
 (* You've just defined a new variant type! But this is an overly
 simplistic representation of colors. Let's make it more usable.
@@ -91,7 +91,8 @@ channels. You'll want to use Simple and RGB as the value constructors
 in this new variant type.
 ......................................................................*)
 
-type color = NotImplemented ;;
+type color = Simple of color_label
+            | RGB of int * int * int ;;
 
 (* Note that there is an important assumption about the RGB values
 that determine whether a color is valid or not. The RGB type contains
@@ -117,8 +118,16 @@ an Invalid_Color exception with a useful message.
 
 exception Invalid_Color of string ;;
 
-let valid_rgb = 
-  fun _ -> failwith "valid_rgb not implemented" ;;
+let valid_rgb (c: color) : color = 
+  match c with
+  | Simple (cl) -> Simple (cl)
+  | RGB (r, g, b) -> match (r >= 0 && r <= 255) && (g >= 0 && g <= 255) && (b >= 0 && b <= 255) with 
+                    | true ->  RGB (r, g, b) 
+                    | false -> raise (Invalid_Color "Only values between 0 and 255 are valid.")
+                      (*if (r >= 0 && r <= 255) && (g >= 0 && g <= 255) && (b >= 0 && b <= 255) then RGB (r,g,b) else raise (Invalid_Color "Only values between 0 and 255 are valid. See value for r");
+                      if g >= 0 && g <= 255 then RGB (r,g,b) else raise (Invalid_Color "Only values between 0 and 255 are valid. See value for r");
+                      if b >= 0 && b <= 255 then RGB (r,g,b) else raise (Invalid_Color "Only values between 0 and 255 are valid. See value for r")*)
+;;
 
 (*......................................................................
 Exercise 3: Write a function, make_color, that accepts three integers
@@ -126,8 +135,9 @@ for the channel values and returns a value of the color type. Be sure
 to verify the invariant.
 ......................................................................*)
 
-let make_color = 
-  fun _ -> failwith "make_color not implemented" ;;
+let make_color (r: int) (g: int) (b: int) : color = 
+  valid_rgb (RGB (r, g, b))
+  ;;
 
 (*......................................................................
 Exercise 4: Write a function, convert_to_rgb, that accepts a color and
@@ -144,8 +154,19 @@ below are some other values you might find helpful.
     240 | 130 | 240 | Violet
 ......................................................................*)
 
-let convert_to_rgb = 
-  fun _ -> failwith "convert_to_rgb not implemented" ;;
+let convert_to_rgb c = 
+  match c with
+  | RGB (r, g, b) -> (r, g, b) 
+  | Simple (cval) -> match cval with
+                     | Red -> (255, 0, 0)
+                     | Crimson -> (220, 20, 60)
+                     | Orange -> (255, 165, 0)
+                     | Yellow -> (255, 255, 0)
+                     | Green -> (0, 255, 0)
+                     | Blue -> (255, 0, 0)
+                     | Indigo -> (75, 0, 130)
+                     | Violet -> (240, 130, 240)
+;;
 
 (* If we want to blend two colors, we might be tempted to average each
 of the individual color channels. This might be fine, but a quirk in
