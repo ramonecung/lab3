@@ -56,7 +56,14 @@ be any of the following options: red, crimson, orange, yellow, green,
 blue, indigo, or violet.
 ......................................................................*)
 
-type color_label = Red | Crimson | Orange | Yellow | Green | Blue | Indigo | Violet ;;
+type color_label = | Red 
+                   | Crimson 
+                   | Orange 
+                   | Yellow 
+                   | Green 
+                   | Blue 
+                   | Indigo 
+                   | Violet ;;
 
 (* You've just defined a new variant type! But this is an overly
 simplistic representation of colors. Let's make it more usable.
@@ -118,15 +125,19 @@ an Invalid_Color exception with a useful message.
 
 exception Invalid_Color of string ;;
 
+(*This function can likely be factored. The repetitive match cases
+look like a good canidate for function.*)
 let valid_rgb (c: color) : color = 
   match c with
   | Simple (cl) -> Simple (cl)
-  | RGB (r, g, b) -> match (r >= 0 && r <= 255) && (g >= 0 && g <= 255) && (b >= 0 && b <= 255) with 
-                    | true ->  RGB (r, g, b) 
-                    | false -> raise (Invalid_Color "Only values between 0 and 255 are valid.")
-                      (*if (r >= 0 && r <= 255) && (g >= 0 && g <= 255) && (b >= 0 && b <= 255) then RGB (r,g,b) else raise (Invalid_Color "Only values between 0 and 255 are valid. See value for r");
-                      if g >= 0 && g <= 255 then RGB (r,g,b) else raise (Invalid_Color "Only values between 0 and 255 are valid. See value for r");
-                      if b >= 0 && b <= 255 then RGB (r,g,b) else raise (Invalid_Color "Only values between 0 and 255 are valid. See value for r")*)
+  | RGB (r, g, b) -> 
+    match (r >= 0 && r <= 255) && 
+          (g >= 0 && g <= 255) && 
+          (b >= 0 && b <= 255) with 
+          | true ->  RGB (r, g, b) 
+          | false -> raise 
+            (Invalid_Color "Only values between 0 and 255 are valid.")
+
 ;;
 
 (*......................................................................
