@@ -382,12 +382,6 @@ let marry (fam: family) (p: person) : family =
 ;;
 
 
-
-
-
-
-
-
 (*......................................................................
 Exercise 13: Write a function that accepts two families, and returns
 an enlarged family with the second family added as a child of the
@@ -397,16 +391,28 @@ assumptions provided in the type definition of family to determine how
 to behave in corner cases.
 ......................................................................*)
 
-let add_to_family (fam1: family) (fam2: family) = 
-  fun _ -> failwith "add_to_family not implemented" ;;
+let add_to_family (fam1: family) (fam2: family) : family = 
+  match fam1, fam2 with
+  | Family (m1, m2, famlist), 
+      Single (p2) -> Family (m1, m2, Single p2 :: famlist)
+  | Family (m1, m2, famlist), Family (m3, m4, famlist2) -> 
+      Family (m1, m2, Single m3 :: Single m4 :: famlist @ famlist2)
+  | Single _, _ -> raise 
+      (Family_Trouble "A single person cannot have a family.")
+  ;;
 
 (*......................................................................
 Exercise 14: Complete the function below that counts the number of
 people in a given family. Be sure you count all spouses and children.
 ......................................................................*)
 
-let count_people = 
-  fun _ -> failwith "count_people not implemented" ;;
+let count_people (fam: family) : int = 
+  match fam with
+  | Single _ -> 1
+  | Family (_, _, famlist) -> 2 + List.fold_left ( fun acc x -> acc + 1 ) 0 famlist
+  ;;
+
+
 
 (*......................................................................
 Exercise 15: Write a function find_parents of type
@@ -425,8 +431,13 @@ inequality. You may be accustomed to other operators, like, "==" and
 the Pervasives module can help explain why.)
 ......................................................................*)
 
-let find_parents = 
-  fun _ -> failwith "find_parents not implemented" ;;
+let find_parents (fam: family) (n: string) : (person * person) option = 
+  let help (p: (person * person) option) (fa: family) : (person * person) option = 
+    match fa with
+    | Single pers -> if pers.name = then  
+  in
+
+  ;;
 
 
 (*======================================================================
