@@ -359,16 +359,10 @@ ensure the invariants are preserved for color and date, use them here
 as well.
 ......................................................................*)
 
-let new_child (name: string) (fav: color) (birthday: date) =
+let new_child (name: string) (fav: color) (birthday: date) : family=
   Single { name = name; favorite = fav; birthdate = birthday }
 ;;
 
-(*......................................................................
-Exercise 12: Write a function that allows a person to marry in to a
-family, by accepting a family and a person, and returning a new and
-enlarged family. How should this behave in the event that the family
-is already made up of a married couple?
-......................................................................*)
 
 exception Family_Trouble of string ;;
 
