@@ -205,12 +205,7 @@ sure to round your result when converting back to an integer.
 ......................................................................*)
 
 let blend_channel (channel_a: int) (channel_b: int) : int = 
-  (* match (channel_a >= 0 && channel_a <= 255) && (channel_b >= 0 && channel_b <= 255) with 
-  | true ->  int_of_float (sqrt( ((float_of_int x) ** 2. +. (float_of_int y) ** 2.) /. 2. ))
-  | false -> raise 
-    (Invalid_Color "Only values between 0 and 255 are valid.") *)
-
-    int_of_float (sqrt( ((float_of_int channel_a) ** 2. +. (float_of_int channel_b) ** 2.) /. 2. ));;
+    int_of_float (sqrt( ((float_of_int channel_a) ** 2. +. (float_of_int channel_b) ** 2.) /. 2. ))
   ;;
 
 (*......................................................................
@@ -219,8 +214,10 @@ blending two colors. Do you need to do anything special to preserve
 the invariant in this function after blending?
 ......................................................................*)
 
-let blend = 
-  fun _ -> failwith "blend not implemented" ;;
+let blend (color_a: color) (color_b: color) : color = 
+   match convert_to_rgb (valid_rgb color_a), convert_to_rgb (valid_rgb color_b)  with
+   | (r_a, g_a, b_a), (r_b, g_b, b_b) -> RGB (blend_channel r_a r_b, blend_channel g_a g_b, blend_channel b_a b_b)  
+  ;;
 
    
 (*======================================================================
@@ -246,7 +243,10 @@ should be. Then, consider the implications of representing the overall
 data type as a tuple or a record.
 ......................................................................*)
 
-type date = NotImplemented ;;
+type date = { day : int;
+              month : int;
+              year : int }
+;;
 
 (* After you've thought it through, look up the Date module in the
 OCaml documentation to see how this was implemented there. If you
@@ -288,9 +288,19 @@ the invariant is violated, and returns the date if valid.
 
 exception Invalid_Date of string ;;
 
-let valid_date = 
-  fun _ -> failwith "valid_date not implemented" ;;
-
+let valid_date ({ year; month; day } as d) : date =
+  if year <= 0 then raise (Invalid_Date "only positive years") else 
+let leap = year mod 4 = 0 && year mod 100 <> 0 || year mod 400 = 0 in
+let max_days = 
+  match month with
+| 1 | 3 | 5 | 7 | 8 | 10 | 12 -> 31
+| 4 | 6 | 9 | 11 -> 30
+| 2 -> if leap then 29 else 28 
+| _ -> raise (Invalid_Date "bad month") in
+if day > max_days then raise (Invalid_Date "too many days")
+else if day < 1 then raise (Invalid_Date "days must be >1")
+else d
+;;
 
 (*======================================================================
 Part 3: Algebraic data types
@@ -303,7 +313,10 @@ Exercise 10: Define a person record type. Use the field names "name",
 "favorite", and "birthdate".
 ......................................................................*)
 
-type person = NotImplemented ;;
+type person = { name : string; 
+                favorite : color;
+                birthday : date; }  
+;;
 
 (* Let's now do something with these person values. We'll create a
 data structure that allows us to model simple familial relationships.
@@ -342,8 +355,9 @@ ensure the invariants are preserved for color and date, use them here
 as well.
 ......................................................................*)
 
-let new_child = 
-  fun _ -> failwith "new_child not implemented" ;;
+let new_child (name: string) (fav: color) (birthday: date): person =
+  { name = name; favorite = fav; birthday = birthday }
+;;
 
 (*......................................................................
 Exercise 12: Write a function that allows a person to marry in to a
@@ -354,8 +368,12 @@ is already made up of a married couple?
 
 exception Family_Trouble of string ;;
 
-let marry = 
-  fun _ -> failwith "marry not implemented" ;;
+let marry (fam: family) (p: person) : family =
+  match fam with
+  | Single (p1) -> Family (p1, p, [])
+  | Family (p1, p2, []) -> raise (Family_Trouble "Cannot marry into this family!")
+  | Family (p1, p2, famlist) -> Family (p1, p2, Single p ::famlist)
+;;
 
 (*......................................................................
 Exercise 13: Write a function that accepts two families, and returns
@@ -366,7 +384,7 @@ assumptions provided in the type definition of family to determine how
 to behave in corner cases.
 ......................................................................*)
 
-let add_to_family = 
+let add_to_family (fam1: family) (fam2: family) : family = 
   fun _ -> failwith "add_to_family not implemented" ;;
 
 (*......................................................................
