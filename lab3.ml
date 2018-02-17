@@ -431,14 +431,15 @@ inequality. You may be accustomed to other operators, like, "==" and
 the Pervasives module can help explain why.)
 ......................................................................*)
 
-let find_parents (fam: family) (n: string) : (person * person) option = 
-  let help (p: (person * person) option) (fa: family) : (person * person) option = 
+
+  let find_parents (f:family) (n: string) : (person * person) option = 
+    let rec help (p:(person * person) option ) (fa : family) : (person * person) option =
     match fa with
-    | Single pers -> if pers.name = then  
-  in
-
-  ;;
-
+    | Single pers -> if pers.name = n then p else None
+    | Family (p1,p2,f1) -> if p1.name = n || p2.name = n then p else
+    let p_list = List.map (fun p1 p2 -> help (Some (p1, p2))) f1 in
+    List.fold_left (  ) None p_list
+    in help None f ;;
 
 (*======================================================================
 Part 4: A different data structure
