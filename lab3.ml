@@ -359,8 +359,8 @@ ensure the invariants are preserved for color and date, use them here
 as well.
 ......................................................................*)
 
-let new_child (name: string) (fav: color) (birthday: date): person =
-  { name = name; favorite = fav; birthdate = birthday }
+let new_child (pname: string) (fav: color) (birthday: date) =
+   { name = pname; favorite = fav; birthdate = birthday }
 ;;
 
 (*......................................................................
