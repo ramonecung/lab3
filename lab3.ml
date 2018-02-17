@@ -506,8 +506,9 @@ that includes the relationship whereby the third person is a child of
 the first two.
 ......................................................................*)
 
-let add_child_to_graph = 
-  fun _ -> failwith "add_child_to_graph not implemented" ;;
+let add_child_to_graph (graf: graph) (child: person) (p1: person) (p2: person) : graph = 
+  (p1, ParentOf, child) :: (p2, ParentOf, child) :: graf
+  ;;
 
 (*......................................................................
 Exercise 18: Now, rewrite find_parents using this new graph form. Note
@@ -517,5 +518,11 @@ a string representing the name of the person whose parents you want
 to find, returning a person list for the parents.
 ......................................................................*)
 
-let find_parents_graph = 
-  fun _ -> failwith "find_parents_graph not implemented" ;;
+let rec find_parents_graph (graf: graph) (pname: string) : person list = 
+  match graf with
+  | (parent, ParentOf, child) :: tl -> 
+      if parent.name = pname then parent :: find_parents_graph tl pname
+      else find_parents_graph tl pname
+  | _ -> []
+  ;;
+
