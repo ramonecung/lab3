@@ -438,7 +438,9 @@ the Pervasives module can help explain why.)
     | Single pers -> if pers.name = n then p else None
     | Family (p1,p2,f1) -> if p1.name = n || p2.name = n then p else
     let p_list = List.map (fun p1 p2 -> help (Some (p1, p2))) f1 in
-    List.fold_left (  ) None p_list
+    List.fold_left ( fun acc element -> match acc with 
+                                        | element -> Some element 
+                                        | None -> None) None p_list
     in help None f ;;
 
 (*======================================================================
@@ -479,10 +481,12 @@ Exercise 16: Re-write the marry function to build the graph in this
 edge-list form. Keep in mind that you will need to add *two* graph
 edges.  The parameters you need to accept are, in order, the graph, a
 person and another person.
+
 ......................................................................*)
 
-let marry_graph = 
-  fun _ -> failwith "marry_graph not implemented" ;;
+let marry_graph (fam: graph) (p1: person) (p2: person) = 
+  (p1, SpouseOf, p2) :: fam, (p2, SpouseOf, p1) :: fam
+;;
 
 (*There are far fewer restrictions compared to our rigidly-defined
 tree structure with variants. For instance, using the revised
