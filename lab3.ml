@@ -359,8 +359,8 @@ ensure the invariants are preserved for color and date, use them here
 as well.
 ......................................................................*)
 
-let new_child (pname: string) (fav: color) (birthday: date) =
-   { name = pname; favorite = fav; birthdate = birthday }
+let new_child (name: string) (fav: color) (birthday: date) =
+  Single { name = name; favorite = fav; birthdate = birthday }
 ;;
 
 (*......................................................................
@@ -379,6 +379,13 @@ let marry (fam: family) (p: person) : family =
       (Family_Trouble "Cannot marry into this family!")
   | Family (p1, p2, famlist) -> Family (p1, p2, Single p ::famlist)
 ;;
+
+
+
+
+
+
+
 
 (*......................................................................
 Exercise 13: Write a function that accepts two families, and returns
