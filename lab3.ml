@@ -179,7 +179,8 @@ let convert_to_rgb c =
                       | Blue -> (255, 0, 0)
                       | Indigo -> (75, 0, 130)
                       | Violet -> (240, 130, 240))
-  | _ -> raise (Invalid_Color "An unexpected value for type color, variable c was found.")
+  | _ -> raise (
+    Invalid_Color "An unexpected value for type color, variable c was found.")
 ;;
 
 (* If we want to blend two colors, we might be tempted to average each
@@ -205,7 +206,8 @@ sure to round your result when converting back to an integer.
 ......................................................................*)
 
 let blend_channel (channel_a: int) (channel_b: int) : int = 
-    int_of_float (sqrt( ((float_of_int channel_a) ** 2. +. (float_of_int channel_b) ** 2.) /. 2. ))
+    int_of_float (sqrt( ((float_of_int channel_a) ** 2. +. 
+    (float_of_int channel_b) ** 2.) /. 2. ))
   ;;
 
 (*......................................................................
@@ -215,8 +217,10 @@ the invariant in this function after blending?
 ......................................................................*)
 
 let blend (color_a: color) (color_b: color) : color = 
-   match convert_to_rgb (valid_rgb color_a), convert_to_rgb (valid_rgb color_b)  with
-   | (r_a, g_a, b_a), (r_b, g_b, b_b) -> RGB (blend_channel r_a r_b, blend_channel g_a g_b, blend_channel b_a b_b)  
+   match convert_to_rgb (valid_rgb color_a), 
+    convert_to_rgb (valid_rgb color_b)  with
+   | (r_a, g_a, b_a), (r_b, g_b, b_b) -> 
+      RGB (blend_channel r_a r_b, blend_channel g_a g_b, blend_channel b_a b_b)  
   ;;
 
    
@@ -371,7 +375,8 @@ exception Family_Trouble of string ;;
 let marry (fam: family) (p: person) : family =
   match fam with
   | Single (p1) -> Family (p1, p, [])
-  | Family (p1, p2, []) -> raise (Family_Trouble "Cannot marry into this family!")
+  | Family (p1, p2, []) -> raise 
+      (Family_Trouble "Cannot marry into this family!")
   | Family (p1, p2, famlist) -> Family (p1, p2, Single p ::famlist)
 ;;
 
