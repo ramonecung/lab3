@@ -220,7 +220,7 @@ let blend (color_a: color) (color_b: color) : color =
    match convert_to_rgb (valid_rgb color_a), 
     convert_to_rgb (valid_rgb color_b)  with
    | (r_a, g_a, b_a), (r_b, g_b, b_b) -> 
-      RGB (blend_channel r_a r_b, blend_channel g_a g_b, blend_channel b_a b_b)  
+  RGB (blend_channel r_a r_b, blend_channel g_a g_b, blend_channel b_a b_b)  
   ;;
 
    
@@ -389,7 +389,7 @@ assumptions provided in the type definition of family to determine how
 to behave in corner cases.
 ......................................................................*)
 
-let add_to_family (fam1: family) (fam2: family) : family = 
+let add_to_family (fam1: family) (fam2: family) = 
   fun _ -> failwith "add_to_family not implemented" ;;
 
 (*......................................................................
